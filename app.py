@@ -3,8 +3,6 @@ app = Flask(__name__)
 
 from datetime import datetime #날짜, 시간 가져오는 라이브러리
 
-import bcrypt
-
 from pymongo import MongoClient
 client = MongoClient('mongodb+srv://sparta:test@cluster0.5lznp6w.mongodb.net/?retryWrites=true&w=majority')
 db = client.dbsparta
@@ -32,21 +30,18 @@ def update_post():
 @app.route("/guestbook", methods=["POST"])
 def guestbook_post():
     name_receive = request.form['name_give']
-    # password_receive = request.form['password_give'].encode('utf-8') # 받은 비밀번호를 utf-8형식으로 코딩
-    # hased = bcrypt.hashpw(password_receive, bcrypt.gensalt()) # 비밀번호를 해쉬함수로 암호화
-    # print(hased)
     comment_receive = request.form['comment_give']
     now = datetime.now()
     date= "%d년%d월%d일%d시" % (now.year, now.month, now.day, now.hour)
     comment_list = list(db.comment.find({}, {'_id': False}))
     count = len(comment_list) + 1
+    print(count)
     doc ={
 
         "id" : count,
         "name" : name_receive,
         "comment" : comment_receive,
-        "date" : date,
-       # "password" : hased
+        "date" : date
     }
     db.comment.insert_one(doc)
     return jsonify({'msg': '저장 완료!'})
