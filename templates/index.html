@@ -87,6 +87,14 @@
                 window.location.reload()
             });
         }
+        function complete_bucket(id) {
+            let formData = new FormData();
+            formData.append("num_give", id);
+            fetch('/complete', { method: "POST", body: formData, }).then((response) => response.json()).then((data) => {
+                alert(data["msg"]);
+                window.location.reload();
+            });
+        }
         function show_comment() {
             fetch('/guestbook').then((res) => res.json()).then((data) => {
                 let rows = data['result']
