@@ -4,7 +4,7 @@ app = Flask(__name__)
 from datetime import datetime #날짜, 시간 가져오는 라이브러리
 
 from pymongo import MongoClient
-client = MongoClient('')
+client = MongoClient('mongodb+srv://sparta:test@cluster0.5lznp6w.mongodb.net/?retryWrites=true&w=majority')
 db = client.dbsparta
 
 
