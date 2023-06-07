@@ -3,6 +3,8 @@ app = Flask(__name__)
 
 from datetime import datetime #날짜, 시간 가져오는 라이브러리
 
+import bcrypt
+
 from pymongo import MongoClient
 client = MongoClient('mongodb+srv://sparta:test@cluster0.5lznp6w.mongodb.net/?retryWrites=true&w=majority')
 db = client.dbsparta
@@ -12,28 +14,39 @@ db = client.dbsparta
 def home():
    return render_template('index.html')
 
+
+@app.route("/delete", methods=["POST"]) #삭제 메서드
+def delete_post():
+    id_receive = request.form['id_give']
+    id = int(id_receive)
+    db.comment.delete_one({'id':id})
+    return jsonify({'msg' : '삭제 완료!'})
+
 @app.route("/update", methods=["POST"]) #수정 메서드
 def update_post():
     ucomment_receive = request.form['ucomment_give']
-    num_receive = request.form['num_give']
-    db.comment.update_one({'num': int(num_receive)},{'$set':{'comment':ucomment_receive}})
+    id_receive = request.form['id_give']
+    db.comment.update_one({'id': int(id_receive)},{'$set':{'comment':ucomment_receive}})
     return {'msg' : '수정 완료!'}
 
 @app.route("/guestbook", methods=["POST"])
 def guestbook_post():
     name_receive = request.form['name_give']
+    # password_receive = request.form['password_give'].encode('utf-8') # 받은 비밀번호를 utf-8형식으로 코딩
+    # hased = bcrypt.hashpw(password_receive, bcrypt.gensalt()) # 비밀번호를 해쉬함수로 암호화
+    # print(hased)
     comment_receive = request.form['comment_give']
     now = datetime.now()
     date= "%d년%d월%d일%d시" % (now.year, now.month, now.day, now.hour)
     comment_list = list(db.comment.find({}, {'_id': False}))
     count = len(comment_list) + 1
-    print(count)
     doc ={
 
         "id" : count,
         "name" : name_receive,
         "comment" : comment_receive,
-        "date" : date
+        "date" : date,
+       # "password" : hased
     }
     db.comment.insert_one(doc)
     return jsonify({'msg': '저장 완료!'})

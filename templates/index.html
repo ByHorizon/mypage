@@ -78,19 +78,21 @@
         function save_comment() {
             let name = $('#name').val()
             let comment = $('#comment').val()
+            // let password = "@a123456789"
             let formData = new FormData();
             formData.append("name_give", name);
             formData.append("comment_give", comment);
+            // formData.append("password_give", password);
 
             fetch('/guestbook', { method: "POST", body: formData, }).then((res) => res.json()).then((data) => {
                 alert(data["msg"]);
                 window.location.reload()
             });
         }
-        function complete_bucket(id) {
+        function delete_comment(id) {
             let formData = new FormData();
-            formData.append("num_give", id);
-            fetch('/complete', { method: "POST", body: formData, }).then((response) => response.json()).then((data) => {
+            formData.append("id_give", id);
+            fetch('/delete', { method: "POST", body: formData, }).then((res) => res.json()).then((data) => {
                 alert(data["msg"]);
                 window.location.reload();
             });
@@ -109,13 +111,14 @@
                                     <p>${name}</p>
                                     <p>${comment}</p>
                                     <footer class="blockquote-footer">${date}</footer>
-                                </blockquote>`
+                                    <button onclick="delete_comment(${id})" type="button" class="btn btn-outline-primary">삭제</button>
+                                    </blockquote>`
                     $('#comment-list').append(temp_html)
                 })
                 
                 
             })
-
+            
         }
     </script>
 </head>
@@ -143,10 +146,11 @@
         <div class="card">
             <div class="card-body">
                 <blockquote class="blockquote mb-0">
-                    <p>1번</p>
+                    <p id ="id">1번</p>
                     <p>이름</p>
                     <p>새로운 앨범 너무 멋져요!</p>
                     <footer class="blockquote-footer">2023년 6월7일 11시</footer>
+                    <button onclick="delete_comment()" type="button" class="btn btn-outline-primary">삭제</button>
                 </blockquote>
             </div>
         </div>
