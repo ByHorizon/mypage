@@ -12,7 +12,7 @@ db = client.dbsparta
 def home():
    return render_template('index.html')
 
-@app.route("/update", methods=["POST"]) #수정
+@app.route("/update", methods=["POST"]) #수정 메서드
 def update_post():
     ucomment_receive = request.form['ucomment_give']
     num_receive = request.form['num_give']
